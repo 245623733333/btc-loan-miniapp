@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>BTC Loan Eligibility Checker</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      text-align: center;
+      max-width: 400px;
+      margin: 40px auto;
+    }
+    input, button {
+      width: 90%;
+      padding: 10px;
+      margin: 10px 0;
+      font-size: 1em;
+    }
+    button {
+      background: #1a73e8;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+    #result {
+      margin-top: 20px;
+      font-size: 1.1em;
+    }
+  </style>
+</head>
+<body>
+  <h2>BTC Loan Checker</h2>
+  <input id="btc" type="number" placeholder="BTC Collateral (e.g. 0.1)" />
+  <input id="usd" type="number" placeholder="Loan Request (USD)" />
+  <button onclick="checkLoan()">Check</button>
+  <div id="result"></div>
+
+  <script>
+    function checkLoan() {
+      const btc = parseFloat(document.getElementById("btc").value);
+      const usd = parseFloat(document.getElementById("usd").value);
+      const btcPrice = 65000; // Static for now
+
+      if (isNaN(btc) || isNaN(usd)) {
+        document.getElementById("result").innerText = "Please fill both fields.";
+        return;
+      }
+
+      const collateral = btc * btcPrice;
+      const ltv = (usd / collateral) * 100;
+      const eligible = ltv <= 60;
+
+      document.getElementById("result").innerHTML = `
+        💰 Collateral Value: $${collateral.toFixed(2)}<br/>
+        📊 LTV: ${ltv.toFixed(2)}%<br/>
+        ${eligible ? '✅ Eligible for loan' : '❌ Not eligible (LTV too high)'}
+      `;
+    }
+  </script>
+</body>
+</html>

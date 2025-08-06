@@ -22,6 +22,7 @@
       color: white;
       border: none;
       border-radius: 5px;
+      cursor: pointer;
     }
     #result {
       margin-top: 20px;
@@ -40,7 +41,7 @@
     function checkLoan() {
       const btc = parseFloat(document.getElementById("btc").value);
       const usd = parseFloat(document.getElementById("usd").value);
-      const btcPrice = 65000; // Static for now
+      const btcPrice = 65000; // Static BTC price
 
       if (isNaN(btc) || isNaN(usd)) {
         document.getElementById("result").innerText = "Please fill both fields.";

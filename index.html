@@ -32,8 +32,8 @@
 </head>
 <body>
   <h2>BTC Loan Checker</h2>
-  <input id="btc" type="number" placeholder="BTC Collateral (e.g. 0.1)" />
-  <input id="usd" type="number" placeholder="Loan Request (USD)" />
+  <input id="btc" type="number" step="any" placeholder="BTC Collateral (e.g. 0.1)" />
+  <input id="usd" type="number" step="any" placeholder="Loan Request (USD)" />
   <button onclick="checkLoan()">Check</button>
   <div id="result"></div>
 
@@ -41,22 +41,30 @@
     function checkLoan() {
       const btc = parseFloat(document.getElementById("btc").value);
       const usd = parseFloat(document.getElementById("usd").value);
-      const btcPrice = 65000; // Static BTC price
+      const btcPrice = 65000; // You can make this dynamic in future
 
-      if (isNaN(btc) || isNaN(usd)) {
-        document.getElementById("result").innerText = "Please fill both fields.";
+      if (isNaN(btc) || isNaN(usd) || btc <= 0 || usd <= 0) {
+        document.getElementById("result").innerText = "Please enter valid BTC and loan values.";
         return;
       }
 
       const collateral = btc * btcPrice;
       const ltv = (usd / collateral) * 100;
-      const eligible = ltv <= 60;
 
-      document.getElementById("result").innerHTML = `
+      let resultMessage = `
         💰 Collateral Value: $${collateral.toFixed(2)}<br/>
         📊 LTV: ${ltv.toFixed(2)}%<br/>
-        ${eligible ? '✅ Eligible for loan' : '❌ Not eligible (LTV too high)'}
       `;
+
+      if (ltv === 0 || ltv < 0.01) {
+        resultMessage += "❌ Not eligible (LTV too low)";
+      } else if (ltv > 60) {
+        resultMessage += "❌ Not eligible (LTV exceeds 60%)";
+      } else {
+        resultMessage += "✅ Eligible for loan";
+      }
+
+      document.getElementById("result").innerHTML = resultMessage;
     }
   </script>
 </body>

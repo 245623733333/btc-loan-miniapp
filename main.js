@@ -1,5 +1,10 @@
-import { ready } from "https://unpkg.com/smart-widget-handler@latest/dist/index.js";
+import SWHandler from 'https://cdn.jsdelivr.net/npm/smart-widget-handler/+esm';
 
-window.addEventListener("DOMContentLoaded", () => {
-  ready();
+window.addEventListener('DOMContentLoaded', () => {
+  console.log('[CLIENT] Calling ready()...');
+  SWHandler.client.ready();
+
+  SWHandler.client.listen((data) => {
+    console.log('[CLIENT] Received data from host:', data);
+  });
 });

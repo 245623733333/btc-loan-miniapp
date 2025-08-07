@@ -69,15 +69,13 @@
   </script>
 
   <!-- ✅ Load Yakihonne SDK from CDN and call ready() -->
-  <script src="https://unpkg.com/smart-widget-handler@latest/dist/index.js"></script>
-  <script>
-    window.addEventListener("DOMContentLoaded", () => {
-      if (window.ready) {
-        window.ready();
-      } else {
-        console.error("YakiHonne SDK 'ready' not found.");
-      }
-    });
-  </script>
+  <script type="module">
+  import ready from "https://unpkg.com/smart-widget-handler@latest/dist/index.js";
+
+  window.addEventListener("DOMContentLoaded", () => {
+    ready(); // Call the default export
+  });
+</script>
+
 </body>
 </html>

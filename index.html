@@ -69,17 +69,18 @@
   </script>
 
  <script type="module">
-  import smartWidgetHandler from "https://esm.sh/smart-widget-handler@1.0.34";
+  import { client } from "https://esm.sh/smart-widget-handler@1.0.34";
 
   window.addEventListener("DOMContentLoaded", () => {
-    if (smartWidgetHandler?.ready) {
-      smartWidgetHandler.ready(); // ✅ Required by YakiHonne to mark your app ready
-      console.log("✅ YakiHonne SDK is ready.");
+    if (client?.ready) {
+      console.log("✅ Calling client.ready()");
+      client.ready();
     } else {
       console.error("❌ YakiHonne SDK 'ready' not found.");
     }
   });
 </script>
+
 
 
 

@@ -68,17 +68,18 @@
     }
   </script>
 <script type="module">
-  import * as SW from "https://esm.sh/smart-widget-handler@1.0.34";
+  import smartWidgetHandler from "https://esm.sh/smart-widget-handler@1.0.34";
 
-  console.log("📦 Exported from SDK:", SW);
+  console.log("📦 smart-widget-handler loaded", smartWidgetHandler);
 
-  if (SW?.ready) {
+  if (smartWidgetHandler?.ready) {
     console.log("✅ Found ready()");
-    SW.ready();
+    smartWidgetHandler.ready();
   } else {
     console.error("❌ YakiHonne SDK 'ready' not found.");
   }
 </script>
+
 
 
 

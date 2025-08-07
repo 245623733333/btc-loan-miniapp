@@ -2,8 +2,7 @@
 
 **BTC Loan MiniApp** is a decentralized smart widget that helps users explore Bitcoin loan options. Built for the Nostr and ICP ecosystem, it runs seamlessly on platforms like Yakihonne and is easily embeddable and discoverable through the Smart Widget protocol.
 ## 🧩 Smart Widget Manifest
-Hosted at:
-https://245623733333.github.io/btc-loan-miniapp/well-known/widget.json
+
 This file enables the widget to be discoverable by platforms like [Yakihonne](https://yakihonne.com).
 
 ## 🚀 Features

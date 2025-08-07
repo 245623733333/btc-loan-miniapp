@@ -1,0 +1,29 @@
+Folder PATH listing for volume OS
+Volume serial number is 38EC-7D5D
+C:.
+¦   index.html
+¦   logo.png
+¦   netlify.toml
+¦   package-lock.json
+¦   package.json
+¦   preview.png
+¦   project-files.txt
+¦   README.md
+¦   _headers
+¦   _redirects
+¦   
++---.well-known
+¦       widget.json
+¦       
++---node_modules
+    ¦   .package-lock.json
+    ¦   
+    +---smart-widget-handler
+        ¦   package.json
+        ¦   README.md
+        ¦   
+        +---dist
+                index.d.ts
+                index.js
+                index.js.LICENSE.txt
+                

@@ -3,9 +3,9 @@
   "widget": {
     "title": "BTC Loan MiniApp",
     "description": "Check your BTC loan eligibility using your collateral and LTV ratio.",
-    "appUrl": "https://245623733333.github.io/btc-loan-miniapp/",
-    "iconUrl": "https://245623733333.github.io/btc-loan-miniapp/logo.png",
-    "imageUrl": "https://245623733333.github.io/btc-loan-miniapp/preview.png",
+    "appUrl": "https://glowing-frangipane-db40e9.netlify.app/",
+    "iconUrl": "https://glowing-frangipane-db40e9.netlify.app/logo.png",
+    "imageUrl": "https://glowing-frangipane-db40e9.netlify.app/preview.png",
     "buttonTitle": "Check BTC Loan",
     "tags": ["tool", "loan", "bitcoin"],
     "type": "tool",

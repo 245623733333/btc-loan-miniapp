@@ -68,12 +68,15 @@
     }
   </script>
 
-  <!-- ✅ Load YakiHonne SDK from CDN -->
-  <script type="module">
-    import { ready } from "https://unpkg.com/smart-widget-handler@latest/dist/index.js";
-
+  <!-- ✅ Load Yakihonne SDK from CDN and call ready() -->
+  <script src="https://unpkg.com/smart-widget-handler@latest/dist/index.js"></script>
+  <script>
     window.addEventListener("DOMContentLoaded", () => {
-      ready(); // This lets YakiHonne know your app is ready
+      if (window.ready) {
+        window.ready();
+      } else {
+        console.error("YakiHonne SDK 'ready' not found.");
+      }
     });
   </script>
 </body>

@@ -1,3 +1,5 @@
 /.well-known/widget.json
   Access-Control-Allow-Origin: *
-  Access-Control-Allow-Methods: GET, OPTIONS
+  Content-Type: application/json
+
+

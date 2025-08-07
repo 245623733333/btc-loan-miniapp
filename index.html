@@ -68,28 +68,36 @@
     }
   </script>
 
+  <script type="module">
+    import smartWidgetHandler from "https://esm.sh/smart-widget-handler@1.0.34";
 
-<script type="module">
-  import smartWidgetHandler from "https://esm.sh/smart-widget-handler@1.0.34";
+    console.log("📦 smart-widget-handler loaded", smartWidgetHandler);
 
-  console.log("📦 smart-widget-handler loaded", smartWidgetHandler);
+    async function init() {
+      try {
+        // Wait for smart widget to be ready
+        if (smartWidgetHandler?.client?.ready) {
+          await smartWidgetHandler.client.ready();
+          console.log("✅ client.ready() confirmed");
 
-  // Try client.ready() first
-  if (smartWidgetHandler?.client?.ready) {
-    console.log("✅ Found client.ready()");
-    smartWidgetHandler.client.ready();
-  } 
-  // Fallback to host.ready()
-  else if (smartWidgetHandler?.host?.ready) {
-    console.log("✅ Found host.ready()");
-    smartWidgetHandler.host.ready();
-  } 
-  else {
-    console.error("❌ YakiHonne SDK ready() method not found in client or host.");
-  }
-</script>
+          // Fetch user metadata
+          const user = await smartWidgetHandler.client.getUserMetadata();
+          console.log("📄 User Metadata:", user);
+        } else if (smartWidgetHandler?.host?.ready) {
+          await smartWidgetHandler.host.ready();
+          console.log("✅ host.ready() confirmed");
 
+          const user = await smartWidgetHandler.host.getUserMetadata();
+          console.log("📄 User Metadata:", user);
+        } else {
+          console.error("❌ smart-widget-handler: ready() method not found");
+        }
+      } catch (error) {
+        console.error("🔥 Error fetching user metadata:", error);
+      }
+    }
 
-
+    init();
+  </script>
 </body>
 </html>

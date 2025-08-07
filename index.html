@@ -67,22 +67,20 @@
       document.getElementById("result").innerHTML = resultMessage;
     }
   </script>
+
+
 <script type="module">
   import smartWidgetHandler from "https://esm.sh/smart-widget-handler@1.0.34";
 
   console.log("📦 smart-widget-handler loaded", smartWidgetHandler);
 
-  if (smartWidgetHandler?.ready) {
-    console.log("✅ Found ready()");
-    smartWidgetHandler.ready();
+  if (smartWidgetHandler?.host?.ready) {
+    console.log("✅ Found host.ready()");
+    smartWidgetHandler.host.ready();
   } else {
-    console.error("❌ YakiHonne SDK 'ready' not found.");
+    console.error("❌ YakiHonne SDK 'host.ready()' not found.");
   }
 </script>
-
-
-
-
 
 
 

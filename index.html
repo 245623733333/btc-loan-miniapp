@@ -68,18 +68,19 @@
     }
   </script>
 
- <!-- ✅ Load YakiHonne SDK -->
-<script src="https://unpkg.com/smart-widget-handler@latest/dist/smart-widget-handler.umd.js"></script>
-<script>
+ <script type="module">
+  import SWHandler from "https://esm.sh/smart-widget-handler";
+
   window.addEventListener("DOMContentLoaded", () => {
-    if (window.smartWidgetHandler && typeof window.smartWidgetHandler.ready === "function") {
-      window.smartWidgetHandler.ready(); // ✅ This is the correct call
-      console.log("✅ YakiHonne ready() called.");
+    if (SWHandler && typeof SWHandler.client.ready === "function") {
+      SWHandler.client.ready();
+      console.log("✅ ready() successfully called");
     } else {
-      console.error("❌ YakiHonne SDK 'ready' not found.");
+      console.error("❌ smart-widget-handler SDK not found or ready() unavailable");
     }
   });
 </script>
+
 
 
 

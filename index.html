@@ -69,29 +69,31 @@
   </script>
 
   <script type="module">
-    import smartWidgetHandler from "https://esm.sh/smart-widget-handler@1.0.34";
+  import smartWidgetHandler from "https://esm.sh/smart-widget-handler@1.0.34";
 
-    console.log("📦 smart-widget-handler loaded", smartWidgetHandler);
+  const widgetId = "naddr1qvzqqqr42ypzqj6prr7zzx6ts9ggavuqwfdhllqa9e3uladq9vyj38x4kh6rxgmjqq2k2mmef4nyjarfvf5x733jdv6xgcthv4ykxevfswq"; // Replace with your widget naddr
 
-    // Make the widget ready
-    if (smartWidgetHandler?.client?.ready) {
-      console.log("✅ Found client.ready()");
-      smartWidgetHandler.client.ready();
-    } else if (smartWidgetHandler?.host?.ready) {
-      console.log("✅ Found host.ready()");
-      smartWidgetHandler.host.ready();
-    } else {
-      console.error("❌ YakiHonne SDK ready() method not found.");
-    }
+  console.log("📦 smart-widget-handler loaded", smartWidgetHandler);
 
-    // Get full user metadata
-    if (smartWidgetHandler?.host?.getUserMetadata) {
-      const userMeta = await smartWidgetHandler.host.getUserMetadata();
-      console.log("📥 User Metadata:", userMeta);
-    } else {
-      console.warn("⚠️ getUserMetadata not available in this environment.");
-    }
-  </script>
+  // Make the widget ready
+  if (smartWidgetHandler?.client?.ready) {
+    console.log("✅ Found client.ready()");
+    smartWidgetHandler.client.ready({ widgetId });
+  } else if (smartWidgetHandler?.host?.ready) {
+    console.log("✅ Found host.ready()");
+    smartWidgetHandler.host.ready({ widgetId });
+  } else {
+    console.error("❌ YakiHonne SDK ready() method not found.");
+  }
+
+  // Use top-level await to get user metadata
+  if (smartWidgetHandler?.host?.getUserMetadata) {
+    const userMeta = await smartWidgetHandler.host.getUserMetadata();
+    console.log("📥 User Metadata:", userMeta);
+  } else {
+    console.warn("⚠️ getUserMetadata not available in this environment.");
+  }
+</script>
 
 </body>
 </html>

@@ -67,30 +67,29 @@
       document.getElementById("result").innerHTML = resultMessage;
     }
  <script type="module">
-  import smartWidgetHandler from "https://esm.sh/smart-widget-handler@1.0.34";
+    import smartWidgetHandler from "https://esm.sh/smart-widget-handler@1.0.34";
 
-  console.log("📦 smart-widget-handler loaded", smartWidgetHandler);
+    console.log("📦 smart-widget-handler loaded", smartWidgetHandler);
 
-  // Use host.ready() instead of client.ready()
-  if (smartWidgetHandler?.host?.ready) {
-    console.log("✅ Found host.ready()");
-    smartWidgetHandler.host.ready();
-  } else {
-    console.warn("⚠️ host.ready() not available.");
-  }
+    // Make the widget ready
+    if (smartWidgetHandler?.client?.ready) {
+      console.log("✅ Found client.ready()");
+      smartWidgetHandler.client.ready();
+    } else if (smartWidgetHandler?.host?.ready) {
+      console.log("✅ Found host.ready()");
+      smartWidgetHandler.host.ready();
+    } else {
+      console.error("❌ YakiHonne SDK ready() method not found.");
+    }
 
-  // Now fetch metadata from host
-  if (smartWidgetHandler?.host?.getUserMetadata) {
-    smartWidgetHandler.host.getUserMetadata().then(userMeta => {
+    // Get full user metadata
+    if (smartWidgetHandler?.host?.getUserMetadata) {
+      const userMeta = await smartWidgetHandler.host.getUserMetadata();
       console.log("📥 User Metadata:", userMeta);
-    }).catch(err => {
-      console.error("❌ Error fetching metadata:", err);
-    });
-  } else {
-    console.warn("⚠️ getUserMetadata not available in this environment.");
-  }
-</script>
-
+    } else {
+      console.warn("⚠️ getUserMetadata not available in this environment.");
+    }
+  </script>
 
 </body>
 </html>

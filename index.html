@@ -74,15 +74,20 @@
 
   console.log("📦 smart-widget-handler loaded", smartWidgetHandler);
 
-  if (smartWidgetHandler?.host?.ready) {
+  // Try client.ready() first
+  if (smartWidgetHandler?.client?.ready) {
+    console.log("✅ Found client.ready()");
+    smartWidgetHandler.client.ready();
+  } 
+  // Fallback to host.ready()
+  else if (smartWidgetHandler?.host?.ready) {
     console.log("✅ Found host.ready()");
     smartWidgetHandler.host.ready();
-  } else {
-    console.error("❌ YakiHonne SDK 'host.ready()' not found.");
+  } 
+  else {
+    console.error("❌ YakiHonne SDK ready() method not found in client or host.");
   }
 </script>
-
-
 
 
 

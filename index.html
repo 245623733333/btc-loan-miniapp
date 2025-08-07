@@ -70,16 +70,18 @@
 
   <!-- ✅ Load Yakihonne SDK from CDN and call ready() -->
   <!-- ✅ Load YakiHonne SDK UMD version -->
-<script src="https://unpkg.com/smart-widget-handler@latest/dist/index.umd.js"></script>
+<script src="https://unpkg.com/smart-widget-handler@latest/dist/smart-widget-handler.umd.js"></script>
 <script>
-  window.addEventListener('DOMContentLoaded', () => {
-    if (window.ready) {
-      window.ready(); // Let YakiHonne know the widget is ready
+  window.addEventListener("DOMContentLoaded", () => {
+    if (typeof window.ready === "function") {
+      window.ready(); // Let YakiHonne know the app is ready
+      console.log("✅ YakiHonne ready called.");
     } else {
       console.error("❌ YakiHonne SDK 'ready' not found.");
     }
   });
 </script>
+
 
 
 </body>

@@ -86,42 +86,46 @@
     }
   </script>
 
-  <script type="module">
-    import smartWidgetHandler from "https://esm.sh/smart-widget-handler@1.0.34";
+ <script type="module">
+  import smartWidgetHandler from "https://esm.sh/smart-widget-handler@1.0.34";
 
-    async function init() {
-      try {
-        const handler = smartWidgetHandler?.client ?? smartWidgetHandler?.host;
-        if (!handler?.ready) {
-          console.error("❌ smart-widget-handler: ready() not found");
-          return;
-        }
+  console.log("📦 smart-widget-handler loaded", smartWidgetHandler);
 
-        await handler.ready();
+  async function init() {
+    try {
+      if (smartWidgetHandler?.client?.ready) {
+        await smartWidgetHandler.client.ready();
         console.log("✅ Widget ready");
 
-        const user = await handler.getUserMetadata();
-        console.log("📄 User Metadata:", user);
+        // Listen for metadata sent from the host
+        smartWidgetHandler.client.listen((data) => {
+          console.log("📥 Data received from host:", data);
 
-        if (user) {
-          const { display_name, name, picture } = user;
+          if (data?.user) {
+            const { display_name, name, picture } = data.user;
 
-          if (display_name || name) {
-            document.getElementById("user-name").textContent = display_name || name;
+            if (display_name || name) {
+              document.getElementById("user-name").textContent = display_name || name;
+            }
+
+            if (picture) {
+              const img = document.getElementById("user-pic");
+              img.src = picture;
+              img.style.display = "block";
+            }
           }
+        });
 
-          if (picture) {
-            const img = document.getElementById("user-pic");
-            img.src = picture || "https://ui-avatars.com/api/?name=" + encodeURIComponent(display_name || name);
-            img.style.display = "block";
-          }
-        }
-      } catch (error) {
-        console.error("🔥 Error during init:", error);
+      } else {
+        console.error("❌ smart-widget-handler: client.ready() not found");
       }
+    } catch (error) {
+      console.error("🔥 Error during init:", error);
     }
+  }
 
-    init();
-  </script>
+  init();
+</script>
+
 </body>
 </html>

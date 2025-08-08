@@ -81,48 +81,46 @@
 
       document.getElementById("result").innerHTML = resultMessage;
     }
-  </script>
-
   <script type="module">
-    import SWHandler from "https://cdn.jsdelivr.net/npm/smart-widget-handler/+esm";
+  import handler from "https://cdn.jsdelivr.net/npm/smart-widget-handler/+esm";
 
-    console.log("📦 smart-widget-handler loaded", SWHandler);
+  console.log("📦 smart-widget-handler loaded", handler);
 
-    async function init() {
-      try {
-        if (SWHandler?.client?.ready) {
-          await SWHandler.client.ready();
-          console.log("✅ Widget ready");
+  async function init() {
+    try {
+      if (handler?.client?.ready) {
+        await handler.client.ready();
+        console.log("✅ Widget ready");
 
-          SWHandler.client.listen((data) => {
-            console.log("📥 Data received from host:", data);
+        handler.client.listen((data) => {
+          console.log("📥 Data received from host:", data);
 
-            const user = data?.user;
-            if (user) {
-              const name = user.display_name || user.name || "User";
-              const picture = user.picture;
+          const user = data?.user;
+          if (user) {
+            const name = user.display_name || user.name || "User";
+            const picture = user.picture;
 
-              if (name) {
-                document.getElementById("user-name").textContent = name;
-              }
-
-              if (picture) {
-                const img = document.getElementById("user-pic");
-                img.src = picture;
-                img.style.display = "block";
-              }
+            if (name) {
+              document.getElementById("user-name").textContent = name;
             }
-          });
 
-        } else {
-          console.error("❌ SWHandler.client.ready() not found");
-        }
-      } catch (err) {
-        console.error("🔥 Error during init:", err);
+            if (picture) {
+              const img = document.getElementById("user-pic");
+              img.src = picture;
+              img.style.display = "block";
+            }
+          }
+        });
+      } else {
+        console.error("❌ handler.client.ready() not found");
       }
+    } catch (err) {
+      console.error("🔥 Error during init:", err);
     }
+  }
 
-    init();
-  </script>
+  init();
+</script>
+
 </body>
 </html>

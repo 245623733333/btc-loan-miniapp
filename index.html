@@ -28,9 +28,27 @@
       margin-top: 20px;
       font-size: 1.1em;
     }
+    #user-info {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    #user-pic {
+      border-radius: 50%;
+      display: none;
+    }
+    #user-name {
+      font-weight: bold;
+      font-size: 1.2em;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
+  <div id="user-info">
+    <img id="user-pic" src="" alt="User Picture" width="60" height="60" />
+    <div id="user-name"></div>
+  </div>
+
   <h2>BTC Loan Checker</h2>
   <input id="btc" type="number" step="any" placeholder="BTC Collateral (e.g. 0.1)" />
   <input id="usd" type="number" step="any" placeholder="Loan Request (USD)" />
@@ -71,29 +89,35 @@
   <script type="module">
     import smartWidgetHandler from "https://esm.sh/smart-widget-handler@1.0.34";
 
-    console.log("📦 smart-widget-handler loaded", smartWidgetHandler);
-
     async function init() {
       try {
-        // Wait for smart widget to be ready
-        if (smartWidgetHandler?.client?.ready) {
-          await smartWidgetHandler.client.ready();
-          console.log("✅ client.ready() confirmed");
+        const handler = smartWidgetHandler?.client ?? smartWidgetHandler?.host;
+        if (!handler?.ready) {
+          console.error("❌ smart-widget-handler: ready() not found");
+          return;
+        }
 
-          // Fetch user metadata
-          const user = await smartWidgetHandler.client.getUserMetadata();
-          console.log("📄 User Metadata:", user);
-        } else if (smartWidgetHandler?.host?.ready) {
-          await smartWidgetHandler.host.ready();
-          console.log("✅ host.ready() confirmed");
+        await handler.ready();
+        console.log("✅ Widget ready");
 
-          const user = await smartWidgetHandler.host.getUserMetadata();
-          console.log("📄 User Metadata:", user);
-        } else {
-          console.error("❌ smart-widget-handler: ready() method not found");
+        const user = await handler.getUserMetadata();
+        console.log("📄 User Metadata:", user);
+
+        if (user) {
+          const { display_name, name, picture } = user;
+
+          if (display_name || name) {
+            document.getElementById("user-name").textContent = display_name || name;
+          }
+
+          if (picture) {
+            const img = document.getElementById("user-pic");
+            img.src = picture || "https://ui-avatars.com/api/?name=" + encodeURIComponent(display_name || name);
+            img.style.display = "block";
+          }
         }
       } catch (error) {
-        console.error("🔥 Error fetching user metadata:", error);
+        console.error("🔥 Error during init:", error);
       }
     }
 

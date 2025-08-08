@@ -2,14 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>BTC Loan Checker</title>
+  <title>BTC Loan Eligibility Checker</title>
   <style>
     body {
       font-family: sans-serif;
       padding: 20px;
-      text-align: center;
       max-width: 400px;
       margin: 40px auto;
+      text-align: center;
     }
     input, button {
       width: 90%;
@@ -28,27 +28,42 @@
       margin-top: 20px;
       font-size: 1.1em;
     }
+    #user-section {
+      margin-bottom: 20px;
+    }
     #user-pic {
-      display: none;
+      width: 80px;
+      height: 80px;
       border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      margin-top: 10px;
+      object-fit: cover;
+      display: none;
+      margin-bottom: 10px;
+    }
+    .meta-label {
+      font-weight: bold;
+    }
+    .meta-value {
+      margin-bottom: 5px;
     }
   </style>
 </head>
 <body>
+  <div id="user-section">
+    <img id="user-pic" src="" alt="User Pic" />
+    <div class="meta-label">👤 Name:</div>
+    <div id="user-name" class="meta-value">Loading...</div>
+    <div class="meta-label">🌐 Website:</div>
+    <div id="user-website" class="meta-value">Not provided</div>
+    <div class="meta-label">📝 About:</div>
+    <div id="user-about" class="meta-value">Not provided</div>
+  </div>
+
   <h2>BTC Loan Checker</h2>
-
-  <img id="user-pic" alt="User Picture" />
-  <div id="user-name"></div>
-
   <input id="btc" type="number" step="any" placeholder="BTC Collateral (e.g. 0.1)" />
   <input id="usd" type="number" step="any" placeholder="Loan Request (USD)" />
   <button onclick="checkLoan()">Check</button>
   <div id="result"></div>
 
-  <!-- Loan logic -->
   <script>
     function checkLoan() {
       const btc = parseFloat(document.getElementById("btc").value);
@@ -80,7 +95,6 @@
     }
   </script>
 
-  <!-- Smart Widget Handler logic -->
   <script type="module">
     import handler from "https://esm.sh/smart-widget-handler@1.0.34";
 
@@ -95,20 +109,30 @@
           handler.client.listen((data) => {
             console.log("📥 Data received from host:", data);
 
-            const user = data?.user;
-            if (user) {
-              const name = user.display_name || user.name || "User";
-              const picture = user.picture;
+            const user = data?.user || {};
+            const name = user.display_name || user.name || "Unknown User";
+            const picture = user.picture;
+            const banner = user.banner;
+            const about = user.about || "Not provided";
+            const website = user.website || "Not provided";
 
-              if (name) {
-                document.getElementById("user-name").textContent = name;
-              }
+            // Show name
+            document.getElementById("user-name").textContent = name;
 
-              if (picture) {
-                const img = document.getElementById("user-pic");
-                img.src = picture;
-                img.style.display = "block";
-              }
+            // Show website
+            document.getElementById("user-website").textContent = website;
+
+            // Show about
+            document.getElementById("user-about").textContent = about;
+
+            // Show picture or fallback banner
+            const img = document.getElementById("user-pic");
+            if (picture) {
+              img.src = picture;
+              img.style.display = "block";
+            } else if (banner) {
+              img.src = banner;
+              img.style.display = "block";
             }
           });
         } else {

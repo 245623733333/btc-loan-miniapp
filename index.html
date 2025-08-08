@@ -28,28 +28,25 @@
       margin-top: 20px;
       font-size: 1.1em;
     }
-    #user-info {
-      text-align: center;
-      margin-bottom: 20px;
-    }
     #user-pic {
-      border-radius: 50%;
       display: none;
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      margin: 10px auto 0;
     }
     #user-name {
-      font-weight: bold;
-      font-size: 1.2em;
       margin-top: 10px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <div id="user-info">
-    <img id="user-pic" src="" alt="User Picture" width="60" height="60" />
-    <div id="user-name"></div>
-  </div>
-
   <h2>BTC Loan Checker</h2>
+
+  <img id="user-pic" />
+  <div id="user-name"></div>
+
   <input id="btc" type="number" step="any" placeholder="BTC Collateral (e.g. 0.1)" />
   <input id="usd" type="number" step="any" placeholder="Loan Request (USD)" />
   <button onclick="checkLoan()">Check</button>
@@ -86,46 +83,46 @@
     }
   </script>
 
- <script type="module">
-  import smartWidgetHandler from "https://esm.sh/smart-widget-handler@1.0.34";
+  <script type="module">
+    import SWHandler from "https://cdn.jsdelivr.net/npm/smart-widget-handler/+esm";
 
-  console.log("📦 smart-widget-handler loaded", smartWidgetHandler);
+    console.log("📦 smart-widget-handler loaded", SWHandler);
 
-  async function init() {
-    try {
-      if (smartWidgetHandler?.client?.ready) {
-        await smartWidgetHandler.client.ready();
-        console.log("✅ Widget ready");
+    async function init() {
+      try {
+        if (SWHandler?.client?.ready) {
+          await SWHandler.client.ready();
+          console.log("✅ Widget ready");
 
-        // Listen for metadata sent from the host
-        smartWidgetHandler.client.listen((data) => {
-          console.log("📥 Data received from host:", data);
+          SWHandler.client.listen((data) => {
+            console.log("📥 Data received from host:", data);
 
-          if (data?.user) {
-            const { display_name, name, picture } = data.user;
+            const user = data?.user;
+            if (user) {
+              const name = user.display_name || user.name || "User";
+              const picture = user.picture;
 
-            if (display_name || name) {
-              document.getElementById("user-name").textContent = display_name || name;
+              if (name) {
+                document.getElementById("user-name").textContent = name;
+              }
+
+              if (picture) {
+                const img = document.getElementById("user-pic");
+                img.src = picture;
+                img.style.display = "block";
+              }
             }
+          });
 
-            if (picture) {
-              const img = document.getElementById("user-pic");
-              img.src = picture;
-              img.style.display = "block";
-            }
-          }
-        });
-
-      } else {
-        console.error("❌ smart-widget-handler: client.ready() not found");
+        } else {
+          console.error("❌ SWHandler.client.ready() not found");
+        }
+      } catch (err) {
+        console.error("🔥 Error during init:", err);
       }
-    } catch (error) {
-      console.error("🔥 Error during init:", error);
     }
-  }
 
-  init();
-</script>
-
+    init();
+  </script>
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>BTC Loan Eligibility Checker</title>
+  <title>BTC Loan Checker</title>
   <style>
     body {
       font-family: sans-serif;
@@ -10,60 +10,42 @@
       text-align: center;
       max-width: 400px;
       margin: 40px auto;
-      background-color: #000; /* Dark background */
-      color: #fff;
+      background: #121212;
+      color: white;
     }
     input, button {
       width: 90%;
       padding: 10px;
       margin: 10px 0;
       font-size: 1em;
-      border-radius: 5px;
-      border: none;
-    }
-    input {
-      background-color: #222;
-      color: #fff;
     }
     button {
       background: #1a73e8;
       color: white;
+      border: none;
+      border-radius: 5px;
       cursor: pointer;
     }
     #result {
       margin-top: 20px;
-      font-size: 1.1em;
+      font-size: 1em;
     }
-    #user-profile {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-    #user-avatar {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
+    #user-pic {
       display: none;
-    }
-    #user-name {
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
       margin-top: 10px;
-    }
-    #user-about {
-      font-size: 0.9rem;
-      color: #aaa;
     }
   </style>
 </head>
 <body>
 
-  <!-- User Profile -->
-  <div id="user-profile">
-    <img id="user-avatar" src="" alt="User Avatar" />
-    <h2 id="user-name">Unknown User</h2>
-    <p id="user-about">About not provided</p>
-  </div>
-
-  <!-- BTC Loan Form -->
   <h2>BTC Loan Checker</h2>
+
+  <img id="user-pic" alt="User Picture" />
+  <div id="user-name"></div>
+
   <input id="btc" type="number" step="any" placeholder="BTC Collateral (e.g. 0.1)" />
   <input id="usd" type="number" step="any" placeholder="Loan Request (USD)" />
   <button onclick="checkLoan()">Check</button>
@@ -84,63 +66,62 @@
       const ltv = (usd / collateral) * 100;
 
       let resultMessage = `
-        💰 Collateral Value: $${collateral.toFixed(2)}<br/>
-        📊 LTV: ${ltv.toFixed(2)}%<br/>
+        <div>Collateral Value: $${collateral.toFixed(2)}</div>
+        <div>LTV: ${ltv.toFixed(2)}%</div>
       `;
 
       if (ltv === 0 || ltv < 0.01) {
-        resultMessage += "❌ Not eligible (LTV too low)";
+        resultMessage += "<div>Status: Not eligible (LTV too low)</div>";
       } else if (ltv > 60) {
-        resultMessage += "❌ Not eligible (LTV exceeds 60%)";
+        resultMessage += "<div>Status: Not eligible (LTV exceeds 60%)</div>";
       } else {
-        resultMessage += "✅ Eligible for loan";
+        resultMessage += "<div>Status: Eligible for loan</div>";
       }
 
       document.getElementById("result").innerHTML = resultMessage;
     }
   </script>
 
-<script type="module">
-  import handler from 'https://cdn.jsdelivr.net/npm/smart-widget-handler/+esm';
+  <script type="module">
+    import handler from "https://esm.sh/smart-widget-handler@1.0.34";
 
-  console.log("📦 smart-widget-handler loaded", handler);
+    console.log("📦 smart-widget-handler loaded", handler);
 
-  async function init() {
-    try {
-      if (handler?.client?.listen) {
-        console.log("✅ Widget ready");
+    async function init() {
+      try {
+        if (handler?.client?.ready) {
+          await handler.client.ready();
+          console.log("✅ Widget ready");
 
-        // Listen for user metadata
-        handler.client.listen((data) => {
-          console.log("📥 Data received from host:", data);
+          handler.client.listen((data) => {
+            console.log("📥 Data received from host:", data);
 
-          const user = data?.user || {};
-          const name = (user.display_name || user.name || "").trim() || "Unknown User";
-          const about = user.about?.trim() || "About not provided";
-          const avatar = user.picture?.trim() || user.banner?.trim();
+            const user = data?.user;
+            if (user) {
+              const name = user.display_name || user.name || "User";
+              const picture = user.picture;
 
-          document.getElementById("user-name").textContent = name;
-          document.getElementById("user-about").textContent = about;
+              if (name) {
+                document.getElementById("user-name").textContent = name;
+              }
 
-          if (avatar) {
-            const avatarEl = document.getElementById("user-avatar");
-            avatarEl.src = avatar;
-            avatarEl.style.display = "block";
-          }
-        });
-
-      } else {
-        console.error("❌ handler.client.listen() not available");
+              if (picture) {
+                const img = document.getElementById("user-pic");
+                img.src = picture;
+                img.style.display = "block";
+              }
+            }
+          });
+        } else {
+          console.error("❌ handler.client.ready() not found");
+        }
+      } catch (err) {
+        console.error("🔥 Error during init:", err);
       }
-    } catch (error) {
-      console.error("🔥 Error during init:", error);
     }
-  }
 
-  init();
-</script>
- 
-
+    init();
+  </script>
 
 </body>
 </html>

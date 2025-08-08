@@ -10,6 +10,8 @@
       text-align: center;
       max-width: 400px;
       margin: 40px auto;
+      background: #121212;
+      color: white;
     }
     input, button {
       width: 90%;
@@ -26,7 +28,7 @@
     }
     #result {
       margin-top: 20px;
-      font-size: 1.1em;
+      font-size: 1em;
     }
     #user-pic {
       display: none;
@@ -38,6 +40,7 @@
   </style>
 </head>
 <body>
+
   <h2>BTC Loan Checker</h2>
 
   <img id="user-pic" alt="User Picture" />
@@ -48,7 +51,6 @@
   <button onclick="checkLoan()">Check</button>
   <div id="result"></div>
 
-  <!-- Loan logic -->
   <script>
     function checkLoan() {
       const btc = parseFloat(document.getElementById("btc").value);
@@ -64,23 +66,22 @@
       const ltv = (usd / collateral) * 100;
 
       let resultMessage = `
-        💰 Collateral Value: $${collateral.toFixed(2)}<br/>
-        📊 LTV: ${ltv.toFixed(2)}%<br/>
+        <div>Collateral Value: $${collateral.toFixed(2)}</div>
+        <div>LTV: ${ltv.toFixed(2)}%</div>
       `;
 
       if (ltv === 0 || ltv < 0.01) {
-        resultMessage += "❌ Not eligible (LTV too low)";
+        resultMessage += "<div>Status: Not eligible (LTV too low)</div>";
       } else if (ltv > 60) {
-        resultMessage += "❌ Not eligible (LTV exceeds 60%)";
+        resultMessage += "<div>Status: Not eligible (LTV exceeds 60%)</div>";
       } else {
-        resultMessage += "✅ Eligible for loan";
+        resultMessage += "<div>Status: Eligible for loan</div>";
       }
 
       document.getElementById("result").innerHTML = resultMessage;
     }
   </script>
 
-  <!-- Smart Widget Handler logic -->
   <script type="module">
     import handler from "https://esm.sh/smart-widget-handler@1.0.34";
 
@@ -121,5 +122,6 @@
 
     init();
   </script>
+
 </body>
 </html>

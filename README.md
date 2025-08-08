@@ -1,3 +1,4 @@
+HEAD
 🚀 BTC Loan MiniApp
 BTC Loan MiniApp is a decentralized smart widget that helps users explore Bitcoin loan eligibility based on their BTC collateral and desired loan amount. Built for the Nostr + ICP ecosystem, it’s designed to work seamlessly with platforms like Yakihonne, and is easily embeddable and discoverable using the Smart Widget Protocol.
 
@@ -61,3 +62,76 @@ Fork the repo, make changes, and open a pull request.
 Sri Amsha
 🔗 GitHub
 
+=======
+
+# 🚀 BTC Loan MiniApp
+
+**BTC Loan MiniApp** is a decentralized smart widget that helps users explore Bitcoin loan eligibility based on their BTC collateral and desired loan amount. Built for the **Nostr + ICP ecosystem**, it’s designed to work seamlessly with platforms like **Yakihonne**, and is easily embeddable and discoverable using the **Smart Widget Protocol**.
+
+---
+
+## 🧩 Smart Widget Manifest
+
+Hosted at:
+
+```
+https://245623733333.github.io/btc-loan-miniapp/.well-known/widget.json
+```
+
+This manifest file enables platforms like **Yakihonne** to auto-discover and display your widget.
+
+---
+
+## ✨ Features
+
+- ✅ Built using **HTML, CSS, JavaScript**
+- ✅ Displays **dynamic user metadata** (name and profile image)
+- ✅ Publishes a Smart Widget manifest at `/.well-known/widget.json`
+- ✅ Runs fully on **GitHub Pages** (no backend/server required)
+- ✅ Simple, responsive UI to simulate BTC loan eligibility
+- ✅ Smart eligibility logic with **LTV (Loan-to-Value)** calculation
+- ✅ Automatically adapts to user context in supported platforms
+- ✅ Compatible with **AI agents** and **Smart Widget search/discovery**
+
+---
+
+## 🧠 How It Works
+
+1. User enters BTC collateral amount and desired USD loan.
+2. App calculates:
+   - Collateral value (based on fixed BTC price)
+   - LTV percentage
+   - Eligibility status
+3. Connected user's profile info (name, picture) is displayed for personalization.
+
+---
+
+## 🖥️ Live Demo
+
+🔗 **[View the Live Widget](https://glowing-frangipane-db40e9.netlify.app/)**  
+🔗 **[GitHub Repository](https://github.com/245623733333/btc-loan-miniapp)**
+
+---
+
+## 📦 Technologies Used
+
+- `smart-widget-handler` via [esm.sh CDN](https://esm.sh)
+- HTML5 + CSS3 + Vanilla JS
+- Smart Widget Protocol
+- Hosted via Netlify & GitHub Pages
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!  
+Fork the repo, make changes, and open a pull request.
+
+---
+
+## 👤 Author
+
+**Sri Amsha**  
+🔗 [GitHub](https://github.com/245623733333)
+>>>>>>> cb940a4 (Update README with latest features and usage)
+git add README.md

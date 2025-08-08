@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>BTC Loan Eligibility Checker</title>
+  <title>BTC Loan Checker</title>
   <style>
     body {
       font-family: sans-serif;
@@ -30,21 +30,17 @@
     }
     #user-pic {
       display: none;
-      width: 64px;
-      height: 64px;
       border-radius: 50%;
-      margin: 10px auto 0;
-    }
-    #user-name {
+      width: 60px;
+      height: 60px;
       margin-top: 10px;
-      font-weight: bold;
     }
   </style>
 </head>
 <body>
   <h2>BTC Loan Checker</h2>
 
-  <img id="user-pic" />
+  <img id="user-pic" alt="User Picture" />
   <div id="user-name"></div>
 
   <input id="btc" type="number" step="any" placeholder="BTC Collateral (e.g. 0.1)" />
@@ -52,6 +48,7 @@
   <button onclick="checkLoan()">Check</button>
   <div id="result"></div>
 
+  <!-- Loan logic -->
   <script>
     function checkLoan() {
       const btc = parseFloat(document.getElementById("btc").value);
@@ -81,50 +78,48 @@
 
       document.getElementById("result").innerHTML = resultMessage;
     }
-  
+  </script>
 
-<script type="module">
-  import handler from "https://esm.sh/smart-widget-handler@1.0.34";
+  <!-- Smart Widget Handler logic -->
+  <script type="module">
+    import handler from "https://esm.sh/smart-widget-handler@1.0.34";
 
-  console.log("📦 smart-widget-handler loaded", handler);
+    console.log("📦 smart-widget-handler loaded", handler);
 
-  async function init() {
-    try {
-      if (handler?.client?.ready) {
-        await handler.client.ready();
-        console.log("✅ Widget ready");
+    async function init() {
+      try {
+        if (handler?.client?.ready) {
+          await handler.client.ready();
+          console.log("✅ Widget ready");
 
-        handler.client.listen((data) => {
-          console.log("📥 Data received from host:", data);
+          handler.client.listen((data) => {
+            console.log("📥 Data received from host:", data);
 
-          const user = data?.user;
-          if (user) {
-            const name = user.display_name || user.name || "User";
-            const picture = user.picture;
+            const user = data?.user;
+            if (user) {
+              const name = user.display_name || user.name || "User";
+              const picture = user.picture;
 
-            if (name) {
-              document.getElementById("user-name").textContent = name;
+              if (name) {
+                document.getElementById("user-name").textContent = name;
+              }
+
+              if (picture) {
+                const img = document.getElementById("user-pic");
+                img.src = picture;
+                img.style.display = "block";
+              }
             }
-
-            if (picture) {
-              const img = document.getElementById("user-pic");
-              img.src = picture;
-              img.style.display = "block";
-            }
-          }
-        });
-      } else {
-        console.error("❌ handler.client.ready() not found");
+          });
+        } else {
+          console.error("❌ handler.client.ready() not found");
+        }
+      } catch (err) {
+        console.error("🔥 Error during init:", err);
       }
-    } catch (err) {
-      console.error("🔥 Error during init:", err);
     }
-  }
 
-  init();
-</script>
-
-
-
+    init();
+  </script>
 </body>
 </html>

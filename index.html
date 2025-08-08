@@ -2,148 +2,119 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>BTC Loan Eligibility Checker</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BTC Loan Checker</title>
   <style>
     body {
-      font-family: sans-serif;
-      padding: 20px;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #121212;
+      color: #fff;
+    }
+
+    .card {
       max-width: 400px;
       margin: 40px auto;
+      background: #1e1e1e;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+      position: relative;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 20px;
+      border-radius: 12px;
+    }
+
+    img {
+      display: none;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      margin: 0 auto;
+    }
+
+    .info {
       text-align: center;
-    }
-    input, button {
-      width: 90%;
-      padding: 10px;
-      margin: 10px 0;
-      font-size: 1em;
-    }
-    button {
-      background: #1a73e8;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    #result {
-      margin-top: 20px;
-      font-size: 1.1em;
-    }
-    #user-section {
       margin-bottom: 20px;
     }
-    #user-pic {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      object-fit: cover;
-      display: none;
+
+    .info p {
+      margin: 5px 0;
+    }
+
+    input {
+      width: 100%;
+      padding: 10px;
       margin-bottom: 10px;
+      border-radius: 6px;
+      border: none;
+      font-size: 16px;
     }
-    .meta-label {
-      font-weight: bold;
-    }
-    .meta-value {
-      margin-bottom: 5px;
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #007bff;
+      color: #fff;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <div id="user-section">
-    <img id="user-pic" src="" alt="User Pic" />
-    <div class="meta-label">👤 Name:</div>
-    <div id="user-name" class="meta-value">Loading...</div>
-    <div class="meta-label">🌐 Website:</div>
-    <div id="user-website" class="meta-value">Not provided</div>
-    <div class="meta-label">📝 About:</div>
-    <div id="user-about" class="meta-value">Not provided</div>
+
+  <div class="card" id="user-card">
+    <div class="overlay">
+      <img id="user-pic" alt="User Picture" />
+      <div class="info">
+        <p>🧑‍💼 <strong>Name:</strong> <span id="user-name">Loading...</span></p>
+        <p>🌐 <strong>Website:</strong> <span id="user-website">Loading...</span></p>
+        <p>📄 <strong>About:</strong> <span id="user-about">Loading...</span></p>
+      </div>
+      <h2>BTC Loan Checker</h2>
+      <input type="text" placeholder="BTC Collateral (e.g. 0.1)" />
+      <input type="text" placeholder="Loan Request (USD)" />
+      <button>Check</button>
+    </div>
   </div>
 
-  <h2>BTC Loan Checker</h2>
-  <input id="btc" type="number" step="any" placeholder="BTC Collateral (e.g. 0.1)" />
-  <input id="usd" type="number" step="any" placeholder="Loan Request (USD)" />
-  <button onclick="checkLoan()">Check</button>
-  <div id="result"></div>
-
-  <script>
-    function checkLoan() {
-      const btc = parseFloat(document.getElementById("btc").value);
-      const usd = parseFloat(document.getElementById("usd").value);
-      const btcPrice = 65000;
-
-      if (isNaN(btc) || isNaN(usd) || btc <= 0 || usd <= 0) {
-        document.getElementById("result").innerText = "Please enter valid BTC and loan values.";
-        return;
-      }
-
-      const collateral = btc * btcPrice;
-      const ltv = (usd / collateral) * 100;
-
-      let resultMessage = `
-        💰 Collateral Value: $${collateral.toFixed(2)}<br/>
-        📊 LTV: ${ltv.toFixed(2)}%<br/>
-      `;
-
-      if (ltv === 0 || ltv < 0.01) {
-        resultMessage += "❌ Not eligible (LTV too low)";
-      } else if (ltv > 60) {
-        resultMessage += "❌ Not eligible (LTV exceeds 60%)";
-      } else {
-        resultMessage += "✅ Eligible for loan";
-      }
-
-      document.getElementById("result").innerHTML = resultMessage;
-    }
-  </script>
-
   <script type="module">
-    import handler from "https://esm.sh/smart-widget-handler@1.0.34";
+    import handler from 'https://esm.sh/smart-widget-handler';
 
-    console.log("📦 smart-widget-handler loaded", handler);
+    handler.client.listen((data) => {
+      console.log("📥 User Metadata:", data);
+      const user = data?.user || {};
 
-    async function init() {
-      try {
-        if (handler?.client?.ready) {
-          await handler.client.ready();
-          console.log("✅ Widget ready");
+      // Clean values
+      const name = (user.display_name || user.name || '').trim() || 'Unknown User';
+      const website = (user.website || '').trim() || 'Not provided';
+      const about = (user.about || '').trim() || 'Not provided';
+      const picture = (user.picture || '').trim();
+      const banner = (user.banner || '').trim();
 
-          handler.client.listen((data) => {
-            console.log("📥 Data received from host:", data);
+      // Inject data
+      document.getElementById("user-name").textContent = name;
+      document.getElementById("user-website").textContent = website;
+      document.getElementById("user-about").textContent = about;
 
-            const user = data?.user || {};
-            const name = user.display_name || user.name || "Unknown User";
-            const picture = user.picture;
-            const banner = user.banner;
-            const about = user.about || "Not provided";
-            const website = user.website || "Not provided";
-
-            // Show name
-            document.getElementById("user-name").textContent = name;
-
-            // Show website
-            document.getElementById("user-website").textContent = website;
-
-            // Show about
-            document.getElementById("user-about").textContent = about;
-
-            // Show picture or fallback banner
-            const img = document.getElementById("user-pic");
-            if (picture) {
-              img.src = picture;
-              img.style.display = "block";
-            } else if (banner) {
-              img.src = banner;
-              img.style.display = "block";
-            }
-          });
-        } else {
-          console.error("❌ handler.client.ready() not found");
-        }
-      } catch (err) {
-        console.error("🔥 Error during init:", err);
+      const img = document.getElementById("user-pic");
+      if (picture) {
+        img.src = picture;
+        img.style.display = 'block';
       }
-    }
 
-    init();
+      if (banner) {
+        document.getElementById("user-card").style.backgroundImage = `url(${banner})`;
+      }
+    });
   </script>
+
 </body>
 </html>

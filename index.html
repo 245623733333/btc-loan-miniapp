@@ -100,45 +100,47 @@
     }
   </script>
 
-  <script type="module">
-    import handler from 'https://cdn.jsdelivr.net/npm/smart-widget-handler/+esm';
+<script type="module">
+  import handler from 'https://cdn.jsdelivr.net/npm/smart-widget-handler/+esm';
 
-    console.log("📦 smart-widget-handler loaded", handler);
+  console.log("📦 smart-widget-handler loaded", handler);
 
-    async function init() {
-      try {
-        if (handler?.client?.ready) {
-          await handler.client.ready();
-          console.log("✅ Widget ready");
+  async function init() {
+    try {
+      if (handler?.client?.listen) {
+        console.log("✅ Widget ready");
 
-          // Listen for user metadata
-          handler.client.listen((data) => {
-            console.log("📥 Data received from host:", data);
+        // Listen for user metadata
+        handler.client.listen((data) => {
+          console.log("📥 Data received from host:", data);
 
-            const user = data?.user || {};
-            const name = (user.display_name || user.name || "").trim() || "Unknown User";
-            const about = user.about?.trim() || "About not provided";
-            const avatar = user.picture?.trim() || user.banner?.trim();
+          const user = data?.user || {};
+          const name = (user.display_name || user.name || "").trim() || "Unknown User";
+          const about = user.about?.trim() || "About not provided";
+          const avatar = user.picture?.trim() || user.banner?.trim();
 
-            document.getElementById("user-name").textContent = name;
-            document.getElementById("user-about").textContent = about;
+          document.getElementById("user-name").textContent = name;
+          document.getElementById("user-about").textContent = about;
 
-            if (avatar) {
-              const avatarEl = document.getElementById("user-avatar");
-              avatarEl.src = avatar;
-              avatarEl.style.display = "block";
-            }
-          });
+          if (avatar) {
+            const avatarEl = document.getElementById("user-avatar");
+            avatarEl.src = avatar;
+            avatarEl.style.display = "block";
+          }
+        });
 
-        } else {
-          console.error("❌ SWHandler.client.ready() not found");
-        }
-      } catch (error) {
-        console.error("🔥 Error during init:", error);
+      } else {
+        console.error("❌ handler.client.listen() not available");
       }
+    } catch (error) {
+      console.error("🔥 Error during init:", error);
     }
+  }
 
-    init();
-  </script>
+  init();
+</script>
+ 
+
+
 </body>
 </html>

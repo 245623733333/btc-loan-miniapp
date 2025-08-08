@@ -2,75 +2,124 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>BTC Loan Checker</title>
   <style>
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #121212;
-      color: #fff;
-    }
-
-    .card {
+      font-family: sans-serif;
+      padding: 20px;
+      text-align: center;
       max-width: 400px;
       margin: 40px auto;
-      background-color: rgba(0, 0, 0, 0.5);
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.4);
-      background-size: cover;
-      background-position: center;
-      position: relative;
     }
-
-    input {
-      width: 100%;
+    input, button {
+      width: 90%;
       padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 6px;
-      border: none;
-      font-size: 16px;
+      margin: 10px 0;
+      font-size: 1em;
     }
-
     button {
-      width: 100%;
-      padding: 12px;
-      background-color: #007bff;
-      color: #fff;
-      font-size: 16px;
+      background: #1a73e8;
+      color: white;
       border: none;
-      border-radius: 6px;
+      border-radius: 5px;
       cursor: pointer;
     }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
+    #result {
+      margin-top: 20px;
+      font-size: 1.1em;
+    }
+    #user-pic {
+      display: none;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
+  <h2>BTC Loan Checker</h2>
 
-  <div class="card" id="user-card">
-    <h2>BTC Loan Checker</h2>
-    <input type="text" placeholder="BTC Collateral (e.g. 0.1)" />
-    <input type="text" placeholder="Loan Request (USD)" />
-    <button>Check</button>
-  </div>
+  <img id="user-pic" alt="User Picture" />
+  <div id="user-name"></div>
 
-  <script type="module">
-    import handler from 'https://esm.sh/smart-widget-handler';
+  <input id="btc" type="number" step="any" placeholder="BTC Collateral (e.g. 0.1)" />
+  <input id="usd" type="number" step="any" placeholder="Loan Request (USD)" />
+  <button onclick="checkLoan()">Check</button>
+  <div id="result"></div>
 
-    handler.client.listen((data) => {
-      const user = data?.user || {};
-      const banner = (user.banner || '').trim();
+  <!-- Loan logic -->
+  <script>
+    function checkLoan() {
+      const btc = parseFloat(document.getElementById("btc").value);
+      const usd = parseFloat(document.getElementById("usd").value);
+      const btcPrice = 65000;
 
-      if (banner) {
-        document.getElementById("user-card").style.backgroundImage = `url(${banner})`;
+      if (isNaN(btc) || isNaN(usd) || btc <= 0 || usd <= 0) {
+        document.getElementById("result").innerText = "Please enter valid BTC and loan values.";
+        return;
       }
-    });
+
+      const collateral = btc * btcPrice;
+      const ltv = (usd / collateral) * 100;
+
+      let resultMessage = `
+        💰 Collateral Value: $${collateral.toFixed(2)}<br/>
+        📊 LTV: ${ltv.toFixed(2)}%<br/>
+      `;
+
+      if (ltv === 0 || ltv < 0.01) {
+        resultMessage += "❌ Not eligible (LTV too low)";
+      } else if (ltv > 60) {
+        resultMessage += "❌ Not eligible (LTV exceeds 60%)";
+      } else {
+        resultMessage += "✅ Eligible for loan";
+      }
+
+      document.getElementById("result").innerHTML = resultMessage;
+    }
   </script>
 
+  <!-- Smart Widget Handler logic -->
+  <script type="module">
+    import handler from "https://esm.sh/smart-widget-handler@1.0.34";
+
+    console.log("📦 smart-widget-handler loaded", handler);
+
+    async function init() {
+      try {
+        if (handler?.client?.ready) {
+          await handler.client.ready();
+          console.log("✅ Widget ready");
+
+          handler.client.listen((data) => {
+            console.log("📥 Data received from host:", data);
+
+            const user = data?.user;
+            if (user) {
+              const name = user.display_name || user.name || "User";
+              const picture = user.picture;
+
+              if (name) {
+                document.getElementById("user-name").textContent = name;
+              }
+
+              if (picture) {
+                const img = document.getElementById("user-pic");
+                img.src = picture;
+                img.style.display = "block";
+              }
+            }
+          });
+        } else {
+          console.error("❌ handler.client.ready() not found");
+        }
+      } catch (err) {
+        console.error("🔥 Error during init:", err);
+      }
+    }
+
+    init();
+  </script>
 </body>
 </html>

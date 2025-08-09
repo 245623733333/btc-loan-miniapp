@@ -8,7 +8,7 @@ Hosted at:
 arduino
 Copy
 Edit
-https://245623733333.github.io/btc-loan-miniapp/.well-known/widget.json
+
 This manifest file enables platforms like Yakihonne to auto-discover and display your widget.
 
 ✨ Features
